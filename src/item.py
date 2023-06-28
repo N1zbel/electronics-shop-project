@@ -1,4 +1,5 @@
 import csv
+import os
 
 
 class Item:
@@ -7,6 +8,7 @@ class Item:
     """
     pay_rate = 1.0
     all = []
+    file_path = os.path.abspath('E:\electronics-shop-project\src\items.csv')
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
@@ -51,13 +53,15 @@ class Item:
             self.__name = value[:10]
 
     @classmethod
-    def instantiate_from_csv(cls):
+    def instantiate_from_csv(cls, path=file_path):
         """класс-метод, инициализирующий экземпляры класса Item данными из файла src/items.csv"""
         cls.all = []
-        with open('E:\electronics-shop-project\src\items.csv') as file:
+        with open(path) as file:
             reader = csv.DictReader(file, delimiter=',')
             for line in reader:
-                cls(str(line['name']), float(line['price']), int(line['quantity']))
+                line['price'] = float(line['price'])
+                line['quantity'] = int(line['quantity'])
+                cls.all.append(cls(**line))
 
     @staticmethod
     def string_to_number(value):
