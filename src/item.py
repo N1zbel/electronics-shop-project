@@ -43,6 +43,12 @@ class Item:
         """
         self.price *= self.pay_rate
 
+    def __add__(self, other):
+        if isinstance(other, self.__class__):
+            return self.quantity + other.quantity
+
+        return None
+
     @property
     def name(self):
         """Получает название товара
