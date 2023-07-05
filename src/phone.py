@@ -28,5 +28,17 @@ class Phone(Item):
     def number_of_sim(self, value):
         """Если количество сим равно или меньше 0 то выдает ошибку"""
         if value <= 0:
-            print("ValueError: Количество физических SIM-карт должно быть целым числом больше нуля.")
+            raise ValueError('Количество физических SIM-карт должно быть целым числом больше нуля.')
         self._number_of_sim = value
+
+    def __add__(self, other) -> int:
+        """
+        Результатом сложения будет суммарное количество товара.
+        other: Другой объект для сложения (экземпляр класса Phone или Item).
+        return: суммарное количество товара.
+        TypeError: если other не является экземпляром класса Phone или Item будет ошибка.
+        """
+        if isinstance(other, (Item, Phone)):
+            return self.quantity + other.quantity
+        else:
+            raise TypeError("Нельзя складывать количество телефонов с другим типом данных")
