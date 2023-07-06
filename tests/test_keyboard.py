@@ -1,6 +1,7 @@
 import pytest
 from src.keyboard import KeyBoard
 
+
 def test_init():
     kb = KeyBoard('razer', 9000, 15)
     assert str(kb) == "razer"

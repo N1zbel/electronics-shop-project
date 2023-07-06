@@ -19,7 +19,6 @@ class MixinLang:
             return self
 
 
-
 class KeyBoard(Item, MixinLang):
 
     def __init__(self, name, price, quantity):
