@@ -8,7 +8,7 @@ class Item:
     """
     pay_rate = 1.0
     all = []
-    file_path = os.path.abspath('E:\electronics-shop-project\src\items.csv')
+    file_directory = os.path.abspath('../src/items.csv')
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
@@ -65,17 +65,37 @@ class Item:
             self.__name = value[:10]
 
     @classmethod
-    def instantiate_from_csv(cls, path=file_path):
-        """класс-метод, инициализирующий экземпляры класса Item данными из файла src/items.csv"""
-        cls.all = []
-        with open(path) as file:
-            reader = csv.DictReader(file, delimiter=',')
-            for line in reader:
-                line['price'] = float(line['price'])
-                line['quantity'] = int(line['quantity'])
-                cls.all.append(cls(**line))
+    def instantiate_from_csv(cls, path=file_directory):
+        """класс-метод, инициализирующий экземпляры класса Item данными из файла src/items.csv
+        если файл csv отсутствует то вызывается исключение"""
+
+        try:
+            if not os.path.exists(path):
+                raise FileNotFoundError('Отсутствует файл items.csv')
+            cls.all = []
+            with open(path) as file:
+                reader = csv.DictReader(file, delimiter=',')
+                for line in reader:
+                    if set(line) != {'name', 'price', 'quantity'}:
+                        raise InstantiateCSVError()
+                    cls(line['name'], float(line['price']), int(line['quantity']))
+
+        except FileNotFoundError:
+            raise
+        except Exception:
+            raise InstantiateCSVError()
 
     @staticmethod
     def string_to_number(value):
         """статический метод, возвращающий число из числа-строки"""
         return int(float(value))
+
+
+class InstantiateCSVError(Exception):
+    """
+    Исключение всплывающее при ошибке чтения файла.
+    """
+
+    def __init__(self, message="Файл item.csv поврежден"):
+        super().__init__(message)
+        self.message = message

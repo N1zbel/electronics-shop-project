@@ -1,4 +1,4 @@
-from src.item import Item
+from src.item import Item, InstantiateCSVError
 import pytest
 
 
@@ -44,7 +44,11 @@ def test_item1_from_csv_name():
 def test_item_instantiate_from_csv():
     item1 = Item("Гаджет", 5000, 2)
     Item.instantiate_from_csv()
-    assert len(Item.all) == 10
+    assert len(Item.all) == 5
+    with pytest.raises(FileNotFoundError):
+        Item.instantiate_from_csv('../items.csv')
+    with pytest.raises(InstantiateCSVError):
+        Item.instantiate_from_csv('../src/test_failed.csv')
 
 
 def test_repr():
@@ -55,3 +59,8 @@ def test_repr():
 def test_str():
     item1 = Item("Смартфон", 10000, 20)
     assert str(item1) == 'Смартфон'
+
+
+def test_InstantiateCSVError():
+    message = InstantiateCSVError('ошибка')
+    assert message.message == 'ошибка'
